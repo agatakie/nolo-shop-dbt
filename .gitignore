@@ -1,0 +1,21 @@
+# Ignore dbt build artifacts
+dbt_modules/
+dbt_packages/
+target/
+logs/
+
+# Ignore Python virtual environments
+.env/
+.venv/
+venv/
+
+# macOS + system
+.DS_Store
+
+# VS Code config
+.vscode/
+
+# Ignore environment/config files
+profiles.yml
+.envrc
+*.env
