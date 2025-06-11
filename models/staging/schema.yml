@@ -1,0 +1,114 @@
+version: 2
+
+sources:
+  - name: raw
+    database: nolo_shop
+    schema: raw
+    tables:
+      - name: products
+      - name: customers
+      - name: stores
+      - name: orders_online
+      - name: orders_store
+      - name: order_items_online
+      - name: order_items_store
+      - name: date_dim
+
+models:
+  - name: stg_crm__products
+    description: "Staging layer for product data"
+    columns:
+      - name: product_id
+        description: "Unique identifier for the product"
+        tests: [not_null, unique]
+      - name: product_name
+        description: "Name of the product"
+      - name: category
+        description: "Product category"
+
+  - name: stg_erp__customers
+    description: "Staging layer for customer data"
+    columns:
+      - name: customer_id
+        description: "Unique identifier for the customer"
+        tests: [not_null, unique]
+      - name: email
+        description: "Customer email address"
+      - name: city
+        description: "Customer city"
+
+  - name: stg_stores_mgmt__stores
+    description: "Staging layer for physical store data"
+    columns:
+      - name: store_id
+        description: "Unique identifier for the store"
+        tests: [not_null, unique]
+      - name: store_location
+        description: "Physical location of the store"
+
+  - name: stg_orders_online_system__orders_online
+    description: "Staging layer for online orders"
+    columns:
+      - name: order_id
+        description: "Unique identifier for the order"
+        tests: [not_null, unique]
+      - name: customer_id
+        description: "ID of the customer who placed the order"
+      - name: order_date
+        description: "Date when the order was placed"
+      - name: order_value
+        description: "Total value of the order"
+
+  - name: stg_pos__orders_store
+    description: "Staging layer for store orders"
+    columns:
+      - name: order_id
+        description: "Unique identifier for the order"
+        tests: [not_null, unique]
+      - name: customer_id
+        description: "ID of the customer (if registered)"
+      - name: order_date
+        description: "Date when the order was placed"
+      - name: order_value
+        description: "Total value of the order"
+      - name: store_id
+        description: "Store where the order was placed"
+
+  - name: stg_orders_online_system__order_items_online
+    description: "Staging layer for online order items"
+    columns:
+      - name: order_id
+        description: "Order ID"
+      - name: product_id
+        description: "Product ID"
+      - name: quantity
+        description: "Quantity of the product ordered"
+      - name: item_price
+        description: "Price of a single item"
+
+  - name: stg_pos__order_items_store
+    description: "Staging layer for store order items"
+    columns:
+      - name: order_id
+        description: "Order ID"
+      - name: product_id
+        description: "Product ID"
+      - name: quantity
+        description: "Quantity of the product ordered"
+      - name: item_price
+        description: "Price of a single item"
+
+  - name: stg_date
+    description: "Staging layer for the date dimension"
+    columns:
+      - name: date_id
+        description: "Surrogate key for date"
+        tests: [not_null, unique]
+      - name: date
+        description: "Calendar date"
+      - name: week
+        description: "Week number"
+      - name: month
+        description: "Month number"
+      - name: year
+        description: "Year"
