@@ -10,6 +10,13 @@ with order_items_all as (
     from {{ ref('stg_pos__order_items_store') }}
 ),
 
+{% if is_incremental() %}
+max_existing as (
+    select max(order_date) as max_order_date
+    from {{ ref('int_orders') }}
+),
+{% endif %}
+
 items_with_date as (
     select
         i.order_id,
@@ -20,7 +27,8 @@ items_with_date as (
     join {{ ref('int_orders') }} o using (order_id)
     
     {% if is_incremental() %}
-      where o.order_date > (select max(order_date) from {{ this }})
+    join max_existing m
+        on o.order_date > m.max_order_date
     {% endif %}
 )
 
