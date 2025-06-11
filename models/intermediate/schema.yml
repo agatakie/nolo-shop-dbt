@@ -1,0 +1,44 @@
+#models/intermediate/schema.yml
+
+version: 2
+
+models:
+  - name: int_orders
+    description: "Unified orders table combining online and store orders"
+    columns:
+      - name: order_id
+        description: "Unique order identifier"
+        tests: [not_null, unique]
+      - name: customer_id
+        description: "Customer who placed the order;null for guest customers"
+      - name: order_date
+        description: "Date when the order was placed"
+        tests: [not_null]
+      - name: order_value
+        description: "Total value of the order"
+      - name: store_id
+        description: "Store where the order was placed, null for online orders"
+      - name: sales_channel
+        description: "Channel through which the order was placed: 'online' or 'store'"
+
+  - name: int_order_items
+    description: "Unified order items table combining online and store items"
+    columns:
+      - name: order_id
+        description: "Foreign key to orders table"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('int_orders')
+              field: order_id
+      - name: product_id
+        description: "Product purchased"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_products')
+              field: product_id
+      - name: quantity
+        description: "Number of units purchased"
+      - name: item_price
+        description: "Price per unit"
