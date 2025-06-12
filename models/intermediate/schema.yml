@@ -11,7 +11,7 @@ models:
         tests: [not_null, unique]
       - name: customer_id
         description: "Customer who placed the order;null for guest customers"
-      - name: order_date
+      - name: order_date_key
         description: "Date when the order was placed"
         tests: [not_null]
       - name: order_value
