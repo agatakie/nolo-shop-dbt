@@ -4,7 +4,7 @@ version: 2
 
 models:
   - name: int_orders
-    description: "Unified orders table combining online and store orders"
+    description: Unified orders table combining online and store orders
     columns:
       - name: order_id
         description: "Unique order identifier"
