@@ -1,6 +1,30 @@
 version: 2
 
 models:
+  - name: fct_orders
+    description: "fact table with one line per order additionaly with no of items"
+    columns:
+      - name: order_id
+        description: "Unique order identifier"
+        tests: [not_null, unique]
+      - name: customer_id
+        description: "Customer who placed the order;null for guest customers"
+      - name: order_date_key
+        description: "Date when the order was placed"
+      - name: week
+        description: "Week number in the year (1–53) (joined from dim_date)"
+      - name: year
+        description: "Year (e.g., 2025)"
+      - name: month
+        description: "Month number (1–12)"
+      - name: order_value
+        description: "Total value of the order"
+      - name: sum_quantity
+        description: "Total quantity of items in the order"
+      - name: store_id
+        description: "Store where the order was placed, null for online orders"
+      - name: sales_channel
+        description: "Channel through which the order was placed: 'online' or 'store'"
   - name: dim_date
     description: "Date dimension. Used to join with fact tables via the date_key column."
     columns:
@@ -9,24 +33,61 @@ models:
         tests:
           - unique
           - not_null
-
       - name: date_day
         description: "Actual date value (DATE type)"
-
       - name: year
         description: "Year (e.g., 2025)"
-
       - name: month
         description: "Month number (1–12)"
-
       - name: day
         description: "Day of the month (1–31)"
-
       - name: quarter
         description: "Quarter of the year (1–4)"
-
       - name: week
         description: "Week number in the year (1–53)"
-
       - name: is_weekend
         description: "TRUE if the date falls on a Saturday or Sunday"
+  - name: fct_sales_by_day_channel_location
+    columns:
+      - name: date_key
+        description: "Date key in YYYYMMDD format (e.g., 20250101)"
+      - name: store_id
+        description: "Store where the order was placed, null for online orders"
+      - name: sales_channel
+        description: "Channel through which the order was placed: 'online' or 'store'"
+      - name: total_sales
+        description: "Date when the order was placed"
+        tests: [not_null]
+      - name: order_count
+        description: "Total value of the order"
+      - name: avg_order_value
+        description: "Average order value in specific day"
+  - name: dim_products
+    description: "dim for product data"
+    columns:
+      - name: product_id
+        description: "Unique identifier for the product"
+        tests: [not_null, unique]
+      - name: product_name
+        description: "Name of the product"
+  - name: fct_order_items
+    description: "fact order table detailed to product level"
+    columns:
+      - name: order_id
+        description: "Foreign key to orders table"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('int_orders')
+              field: order_id
+      - name: product_id
+        description: "Product purchased"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_products')
+              field: product_id
+      - name: quantity
+        description: "Number of units purchased"
+      - name: item_price
+        description: "Price per unit"
