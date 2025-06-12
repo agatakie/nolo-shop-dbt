@@ -12,7 +12,7 @@ with order_items_all as (
 
 {% if is_incremental() %}
 max_existing as (
-    select max(order_date) as max_order_date
+    select max(order_date_key) as max_order_date_key
     from {{ ref('int_orders') }}
 ),
 {% endif %}
@@ -28,7 +28,7 @@ items_with_date as (
     
     {% if is_incremental() %}
     join max_existing m
-        on o.order_date > m.max_order_date
+        on o.order_date_key > m.max_order_date_key
     {% endif %}
 )
 
