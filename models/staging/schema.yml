@@ -97,18 +97,3 @@ models:
         description: "Quantity of the product ordered"
       - name: item_price
         description: "Price of a single item"
-
-  - name: stg_date
-    description: "Staging layer for the date dimension"
-    columns:
-      - name: date_id
-        description: "Surrogate key for date"
-        tests: [not_null, unique]
-      - name: date
-        description: "Calendar date"
-      - name: week
-        description: "Week number"
-      - name: month
-        description: "Month number"
-      - name: year
-        description: "Year"
